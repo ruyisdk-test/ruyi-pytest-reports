@@ -38,11 +38,6 @@ report_name=`jq -r .\"${log_name:?}\" $report_name_js`
 	exit -1
 }
 
-[ ! -f $report_tmpl_dir/26test_log.md ] && {
-	echo 26test_log.md not appears
-	exit -1
-}
-
 [ ! -d $report_tmpl_dir/$log_name ] && {
 	echo report tmpl dir not appears $log_name
 	exit -1
@@ -70,10 +65,16 @@ sed -i "s/{{log_name}}/$log_name/g" $TEST_LITESTER_PATH/my.md
 
 ruyi_conclusion="没有发现问题"
 for tl in "23test_log.md" "25test_log.md"; do
+[ ! -f $report_tmpl_dir/$tl ] && {
+	echo $tl not appears
+	exit -1
+}
+
 if ! grep "exit code: 0" ${temp_dir}/${tl}; then
 	ruyi_conclusion="此处添加评论"
 fi
 done
+
 sed -i "s/{{ruyi_conclusion}}/$ruyi_conclusion/g" $TEST_LITESTER_PATH/my.md
 
 rm -rf $temp_dir
