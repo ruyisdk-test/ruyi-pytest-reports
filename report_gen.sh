@@ -69,9 +69,11 @@ sed -i "s|{{ruyi_pytest_reports_hash}}|${TEST_PYTEST_REPORTS_HASH:?}|g" $TEST_LI
 sed -i "s/{{log_name}}/$log_name/g" $TEST_LITESTER_PATH/my.md
 
 ruyi_conclusion="没有发现问题"
-if ! grep "exit code: 0" ${temp_dir}/26test_log.md; then
+for tl in "23test_log.md" "25test_log.md"; do
+if ! grep "exit code: 0" ${temp_dir}/${tl}; then
 	ruyi_conclusion="此处添加评论"
 fi
+done
 sed -i "s/{{ruyi_conclusion}}/$ruyi_conclusion/g" $TEST_LITESTER_PATH/my.md
 
 rm -rf $temp_dir
