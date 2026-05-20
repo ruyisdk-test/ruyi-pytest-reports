@@ -69,52 +69,13 @@ sed -i "s|{{ruyi_pytest_ci_hash}}|${TEST_PYTEST_CI_HASH:?}|g" $TEST_LITESTER_PAT
 sed -i "s|{{ruyi_pytest_reports_hash}}|${TEST_PYTEST_REPORTS_HASH:?}|g" $TEST_LITESTER_PATH/my.md
 sed -i "s/{{log_name}}/$log_name/g" $TEST_LITESTER_PATH/my.md
 
-mkdir "${TEST_LITESTER_PATH}"/logs
-# format test logs name
-if [ -d "${TEST_LITESTER_PATH}"/mugen_log ]; then
-	for f in $(find "${TEST_LITESTER_PATH}"/mugen_log -type f); do
-		mv "$f" "$(echo "$f" | sed "s/:/_/g")"
-	done
-
-	mv -v "${TEST_LITESTER_PATH}"/mugen_log "${TEST_LITESTER_PATH}"/logs/
-fi
-mv -v "${TEST_LITESTER_PATH}"/*.log "${TEST_LITESTER_PATH}"/logs/
-
 ruyi_conclusion="没有发现问题"
-ruyi_testsuites=4
-ruyi_success=0
-ruyi_failed=0
-# get failed logs
-mkdir "${TEST_LITESTER_PATH}"/logs_failed
-for f in `ls "${TEST_LITESTER_PATH}"/logs/*.log`; do
-	if grep " - ERROR - The case exit by code" "$f"; then
-		cp -v "$f" "${TEST_LITESTER_PATH}"/logs_failed
-		((ruyi_failed++))
-	elif grep "FAIL:" "$f"; then
-		cp -v "$f" "${TEST_LITESTER_PATH}"/logs_failed
-		((ruyi_failed++))
-	else
-		((ruyi_success++))
-	fi
-done
-rmdir --ignore-fail-on-non-empty "${TEST_LITESTER_PATH}"/logs_failed
-
-if [ "$ruyi_failed" -gt 0 ]; then
+if ! grep "exit code: 0" ${temp_dir}/26test_log.md; then
 	ruyi_conclusion="此处添加评论"
 fi
 sed -i "s/{{ruyi_conclusion}}/$ruyi_conclusion/g" $TEST_LITESTER_PATH/my.md
-sed -i "s/{{ruyi_testsuites}}/$ruyi_testsuites/g" $TEST_LITESTER_PATH/my.md
-sed -i "s/{{ruyi_success}}/$ruyi_success/g" $TEST_LITESTER_PATH/my.md
-sed -i "s/{{ruyi_failed}}/$ruyi_failed/g" $TEST_LITESTER_PATH/my.md
+
 # rename md report
 [ -d "$TEST_LITESTER_PATH"/ruyi_report ] || mkdir "$TEST_LITESTER_PATH"/ruyi_report
 mv -v $TEST_LITESTER_PATH/my.md $TEST_LITESTER_PATH/ruyi_report/$report_name.md
-
-# pack all logs
-cd "${TEST_LITESTER_PATH}"
-rm *.md
-[ -d ./logs_failed ] && mv logs_failed "${log_name}"_failed && tar zcvf ruyi-test-logs_failed.tar.gz ./"${log_name}"_failed || touch ruyi-test-logs_failed.tar.gz
-mv ./logs ./"${log_name}"
-tar zcvf ruyi-test-logs.tar.gz ./"${log_name}"
-cd $RUN_PATH
 

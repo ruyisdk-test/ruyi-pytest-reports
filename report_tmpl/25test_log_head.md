@@ -1,4 +1,4 @@
 ### 测试日志
 
 ```bash
-+ rit.bash ruyi -p ruyi-bin
++ python3 -m pytest
