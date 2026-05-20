@@ -15,17 +15,23 @@ SELF_PATH=$(
 )
 RUN_PATH=$(pwd)
 
+name_alias_js="$SELF_PATH"/names_alias.json
 report_name_js="$SELF_PATH"/report_names.json
 report_config_sh="$SELF_PATH"/report_configs.sh
 report_config_my_sh="$SELF_PATH"/report_my_configs.sh
 report_tmpl_dir="$SELF_PATH"/report_tmpl
 
 temp_dir=/tmp/ruyi_report
-report_name=`jq -r .\"${1:?}\" $report_name_js`
-log_name="${1:?}"
+log_name=`jq -r .\"${1:?}\" $name_alias_js`
+report_name=`jq -r .\"${log_name:?}\" $report_name_js`
 
 . "$report_config_my_sh"
 . "$report_config_sh"
+
+[ -z "${log_name}" ] && {
+	echo Cannot get log name
+	exit -1
+}
 
 [ -z "$report_name" ] && {
 	echo Unsupported distro
@@ -37,10 +43,15 @@ log_name="${1:?}"
 	exit -1
 }
 
+[ ! -d $report_tmpl_dir/$log_name ] && {
+	echo report tmpl dir not appears $log_name
+	exit -1
+}
+
 [[ -d $temp_dir ]] && rm -rf $temp_dir
 mkdir $temp_dir
 
-cp ${report_tmpl_dir}/*.md ${report_tmpl_dir}/${1:?}/*.md $temp_dir/
+cp ${report_tmpl_dir}/*.md ${report_tmpl_dir}/${log_name}/*.md $temp_dir/
 
 for f in `ls ${temp_dir} | sort`; do
 	echo Find template ${temp_dir}/$f
