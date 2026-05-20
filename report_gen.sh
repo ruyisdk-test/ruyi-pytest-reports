@@ -57,7 +57,6 @@ for f in `ls ${temp_dir} | sort`; do
 	echo Find template ${temp_dir}/$f
 	cat ${temp_dir}/$f >> $TEST_LITESTER_PATH/my.md
 done
-rm -rf $temp_dir
 
 sed -i "s/{{ruyi_arch}}/${TEST_ARCH:?}/g" $TEST_LITESTER_PATH/my.md
 sed -i "s/{{ruyi_version}}/${TEST_VERSION:?}/g" $TEST_LITESTER_PATH/my.md
@@ -74,6 +73,8 @@ if ! grep "exit code: 0" ${temp_dir}/26test_log.md; then
 	ruyi_conclusion="此处添加评论"
 fi
 sed -i "s/{{ruyi_conclusion}}/$ruyi_conclusion/g" $TEST_LITESTER_PATH/my.md
+
+rm -rf $temp_dir
 
 # rename md report
 [ -d "$TEST_LITESTER_PATH"/ruyi_report ] || mkdir "$TEST_LITESTER_PATH"/ruyi_report
