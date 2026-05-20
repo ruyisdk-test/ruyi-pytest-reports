@@ -64,6 +64,9 @@ sed -i "s/{{ruyi_version}}/${TEST_VERSION:?}/g" $TEST_LITESTER_PATH/my.md
 sed -i "s|{{ruyi_link}}|${TEST_PKG_LINK:?}|g" $TEST_LITESTER_PATH/my.md
 sed -i "s|{{ruyitest_repo}}|${TEST_REPO:?}|g" $TEST_LITESTER_PATH/my.md
 sed -i "s|{{ruyitest_repo_raw}}|${TEST_REPO_RAW:?}|g" $TEST_LITESTER_PATH/my.md
+sed -i "s|{{ruyi_pytest_hash}}|${TEST_PYTEST_HASH:?}|g" $TEST_LITESTER_PATH/my.md
+sed -i "s|{{ruyi_pytest_ci_hash}}|${TEST_PYTEST_CI_HASH:?}|g" $TEST_LITESTER_PATH/my.md
+sed -i "s|{{ruyi_pytest_reports_hash}}|${TEST_PYTEST_REPORTS_HASH:?}|g" $TEST_LITESTER_PATH/my.md
 sed -i "s/{{log_name}}/$log_name/g" $TEST_LITESTER_PATH/my.md
 
 mkdir "${TEST_LITESTER_PATH}"/logs

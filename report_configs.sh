@@ -30,6 +30,9 @@ fi
 
 TEST_ARCH="${TEST_ARCH:?}"
 TEST_LITESTER_PATH="${TEST_LITESTER_PATH:?}"
+TEST_PYTEST_HASH="${TEST_PYTEST_HASH:?}"
+TEST_PYTEST_CI_HASH="${TEST_PYTEST_CI_HASH:?}"
+TEST_PYTEST_REPORTS_HASH="${TEST_PYTEST_REPORTS_HASH:?}"
 TEST_PKG_LINK="${TEST_PKG_LINK:?}"
 TEST_REPO="https://gitee.com/yunxiangluo/ruyisdk-test/tree/master/${TEST_START_TIME:?}"
 TEST_REPO_RAW="https://gitee.com/yunxiangluo/ruyisdk-test/raw/master/${TEST_START_TIME:?}"
